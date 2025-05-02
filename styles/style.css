@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background-color: #fffaf0;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #ff69b4;
+    margin-top: 20px;
+    font-size: 3em;
+    text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.6);
+    animation: bounce 1.5s infinite;
+}
+
+#searchBar {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    min-width: 300px;
+    margin: 20px auto;
+    padding: 12px;
+    font-size: 1.2em;
+    border: 3px solid #ffb6c1;
+    border-radius: 25px;
+    box-shadow: 0 4px 6px rgba(255, 182, 193, 0.4);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#searchBar:focus {
+    border-color: #ff69b4;
+    box-shadow: 0 6px 8px rgba(255, 105, 180, 0.6);
+    outline: none;
+}
+
+#eventList {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px auto;
+    width: 80%;
+    max-width: 800px;
+}
+
+#eventList li {
+    background-color: #ffe4e1;
+    margin: 10px 0;
+    padding: 20px;
+    border: 2px solid #ffb6c1;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(255, 182, 193, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-size: 1.1em;
+    color: #333;
+    position: relative;
+}
+
+#eventList li:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 6px 10px rgba(255, 105, 180, 0.6);
+    background-color: #ffd1dc;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+#eventList li a {
+    text-decoration: none;
+    color: #ff69b4;
+    font-weight: bold;
+    margin-right: 10px;
+    transition: color 0.3s ease;
+}
+
+#eventList li a:hover {
+    color: #ff1493;
+    text-decoration: underline;
+}
+
+#eventList li::before {
+    content: "🌸";
+    color: #ff69b4;
+    font-size: 1.5em;
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+button {
+    padding: 10px 20px;
+    font-weight: bold;
+    background-color: #ed5fb0;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(255, 121, 198, 0.4);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+    background-color: #bd93f9;
+    box-shadow: 0 6px 10px rgba(189, 147, 249, 0.6);
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-15px);
+    }
+    50% {
+        transform: translateY(0);
+    }
+    75% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}

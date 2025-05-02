@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐇 Event Hopper</title>
+    <link id="themeStylesheet" rel="stylesheet" href="./styles/style_dark.css">
+</head>
+<header>
+    <button id="themeToggle">Toggle Theme</button>
+</header>
+<body>
+    <h1>✨ Event Hopper ✨</h1>
+    <input type="text" id="searchBar" placeholder="🐇 Search Event IDs...">
+    <ul id="eventList"></ul>
+
+    <script>
+        let events = [];
+
+        async function loadEvents() {
+            try {
+                const response = await fetch('./data/event_definitions.json');
+                events = await response.json();
+
+                searchEvents();
+            } catch (error) {
+                console.error('Error loading JSON file:', error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            await loadEvents();
+        });
+
+        function searchEvents() {
+            const query = document.getElementById('searchBar').value.trim().toLowerCase() || '';
+            let results = [];
+
+            if (query === '') {
+                results = events.filter(event => event.LoggedTo && event.LoggedTo.toLowerCase() === 'security');
+            } else {
+                results = events.filter(event => {
+                    const idMatch = event.Id && event.Id.toString().toLowerCase() === query;
+                    const messageMatch = event.Message && event.Message.toLowerCase().includes(query);
+                    return idMatch || messageMatch;
+                });
+            }
+
+            results.sort((a, b) => {
+                if (a.LoggedTo.toLowerCase() === 'security' && b.LoggedTo.toLowerCase() !== 'security') {
+                    return -1;
+                }
+                if (a.LoggedTo.toLowerCase() !== 'security' && b.LoggedTo.toLowerCase() === 'security') {
+                    return 1;
+                }
+                return 0;
+            });
+
+            const eventList = document.getElementById('eventList');
+            eventList.innerHTML = '';
+
+            results.forEach(event => {
+                const li = document.createElement('li');
+                const liHeader = document.createElement('strong');
+                const liContent = document.createElement('span');
+                const liContentRendered = document.createElement('span');
+                const caret = document.createElement('span');
+                
+                caret.textContent = ' ▼';
+                caret.style.cursor = 'pointer';
+                caret.style.marginLeft = '10px';
+                liHeader.textContent = `${event.LoggedTo} - ${event.Id}`;
+                liContent.style.display = 'block';
+                liContent.textContent = `${event.Message}`;
+                liContentRendered.style.display = 'none';
+                liContentRendered.innerHTML = event.Message
+                    .replaceAll('\r\n', '<br>')
+                    .replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;');
+
+                liHeader.appendChild(caret);
+                li.appendChild(liHeader);
+                li.appendChild(document.createElement('br'));
+                li.appendChild(liContent);
+                li.appendChild(liContentRendered);
+
+                const collapsible = document.createElement('div');
+                collapsible.style.display = 'none';
+                collapsible.style.marginTop = '5px';
+                collapsible.style.fontSize = '0.8em';
+                collapsible.innerHTML = `Parameters:<br>${JSON.stringify(event.Parameters)}`;
+
+                caret.addEventListener('click', () => {
+                    const isCollapsed = collapsible.style.display === 'none';
+                    collapsible.style.display = isCollapsed ? 'block' : 'none';
+                    liContentRendered.style.display = isCollapsed ? 'block' : 'none';
+                    liContent.style.display = isCollapsed ? 'none' : 'block';
+                    caret.textContent = isCollapsed ? ' ▲' : ' ▼';
+                    caret.title = isCollapsed ? 'Show less' : 'Show more';
+                });
+
+                li.appendChild(collapsible);
+
+                eventList.appendChild(li);
+            });
+        }
+        
+        document.getElementById('searchBar').addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                searchEvents();
+            }
+        });
+
+    </script>
+    <script src="scripts/theme.js"></script>
+</body>
+</html>
